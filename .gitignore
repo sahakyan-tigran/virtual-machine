@@ -1,0 +1,31 @@
+# Build output
+*.o
+*.obj
+*.exe
+*.out
+*.bin
+build/
+virtualmachine
+tests/test_vm
+
+# MSVC / Visual Studio
+.vs/
+Debug/
+Release/
+x64/
+*.user
+
+# CLion / IntelliJ
+.idea/
+cmake-build-*/
+
+# VS Code
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db

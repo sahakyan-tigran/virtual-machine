@@ -1,0 +1,44 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build and run the test suite
+        shell: bash
+        run: |
+          g++ -std=c++17 -Wall -Wextra -I. tests/test_vm.cpp Machine.cpp ALU.cpp Cond.cpp -o test_vm
+          ./test_vm
+
+      - name: Assemble and run the example end to end
+        shell: bash
+        run: |
+          g++ -std=c++17 -Wall -Wextra -I. VirtualMachine.cpp Machine.cpp ALU.cpp Cond.cpp -o virtualmachine
+          python tools/assemble.py examples/sum_to_ten.asm sum_to_ten.bin
+          output=$(./virtualmachine sum_to_ten.bin)
+          echo "program printed: $output"
+          test "$output" = "55"
+
+  makefile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: make test
+      - run: make example PYTHON=python3
+      - run: make clean
