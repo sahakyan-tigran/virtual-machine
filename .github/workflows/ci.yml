@@ -3,6 +3,7 @@ name: tests
 on:
   push:
   pull_request:
+  workflow_dispatch:        # adds the "Run workflow" button on the Actions tab
 
 jobs:
   build:
